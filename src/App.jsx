@@ -1,12 +1,27 @@
 import React, { useState } from 'react';
 import { 
   Shield, Terminal, FileText, Database, Code, 
-  Layers, BarChart2, CheckCircle, RefreshCw 
+  Layers, BarChart2, CheckCircle, RefreshCw, MessageSquare, AlertTriangle, Users
 } from 'lucide-react';
 
 export default function App() {
-  // Estado para controlar qué pestaña está activa
   const [activeTab, setActiveTab] = useState('resumen');
+
+  // Datos de la Bitácora de Prompts (Requisito del 10% de la Rúbrica A)
+  const promptsIa = [
+    {
+      fase: "Investigación de Inyección SQL",
+      prompt: "Actúa como un auditor de seguridad senior. Explica los mecanismos de mitigación de la causa raíz para una inyección SQL basada en un portal web corporativo utilizando consultas parametrizadas en Node.js.",
+      aceptado: "Se adoptó el uso de marcadores de posición (?) para desvincular por completo las instrucciones del motor SQL de los datos proporcionados por el usuario.",
+      corregido: "La IA sugirió inicialmente un WAF genérico, pero lo corregimos priorizando la parametrización en el código fuente para eliminar la causa raíz."
+    },
+    {
+      fase: "Estructura de la Matriz de Riesgo (Informe B)",
+      prompt: "Genera una estructura de matriz de riesgo probabilística (Impacto x Probabilidad) de 5x5 aplicable al sector retail/educacional alineada con la metodología NIST SP 800-30.",
+      aceptado: "Los criterios numéricos de impacto financiero y operativo para ponderar las amenazas críticas en los activos del portal.",
+      corregido: "Se ajustaron los valores de probabilidad de los ataques XSS reflejados, reduciendo su impacto directo en la base de datos central en comparación con la inyección SQL."
+    }
+  ];
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100 font-sans overflow-hidden">
@@ -19,7 +34,7 @@ export default function App() {
             <Shield className="w-7 h-7 text-emerald-400" />
             <div>
               <h1 className="font-bold text-sm tracking-wider text-white">AUDITORÍA TI</h1>
-              <span className="text-xs text-emerald-400 font-mono">pereli_security v3.2</span>
+              <span className="text-xs text-emerald-400 font-mono">pereli_security v3.5</span>
             </div>
           </div>
 
@@ -29,7 +44,7 @@ export default function App() {
               Informe A: Vulnerabilidades
             </span>
             {[
-              { id: 'resumen', label: 'Resumen Ejecutivo', icon: FileText },
+              { id: 'resumen', label: 'Resumen Ejecutivo y IA', icon: FileText },
               { id: 'sqli', label: 'Inyección SQL', icon: Database },
               { id: 'xss', label: 'XSS Reflejado', icon: Code },
               { id: 'cmd', label: 'Inyección de Comandos', icon: Terminal },
@@ -84,6 +99,7 @@ export default function App() {
             </div>
             <div className="truncate">
               <p className="text-xs font-bold text-slate-200">Elías Pérez B.</p>
+              <p className="text-[10px] text-slate-500 truncate">Egresado Informatico</p>
             </div>
           </div>
         </div>
@@ -92,11 +108,110 @@ export default function App() {
       {/* CONTENEDOR PRINCIPAL DE CONTENIDO */}
       <main className="flex-1 overflow-y-auto p-8 bg-slate-950/40">
         <div className="max-w-5xl mx-auto space-y-6">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-            <p className="text-slate-400 text-sm">Pestaña activa temporal:</p>
-            <h2 className="text-2xl font-bold text-emerald-400 uppercase mt-1">{activeTab}</h2>
-            <p className="text-xs text-slate-500 mt-2">En el siguiente commit poblaremos este bloque con los datos de las rúbricas.</p>
-          </div>
+          
+          {/* RENDERIZADO CONDICIONAL SEGÚN LA PESTAÑA */}
+          {activeTab === 'resumen' && (
+            <div className="space-y-6 animate-fadeIn">
+              {/* Encabezado Académico */}
+              <div className="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">Evaluación Unidad 3</span>
+                    <h2 className="text-3xl font-black tracking-tight text-white mt-2">Resumen Ejecutivo de Auditoría</h2>
+                    <p className="text-slate-400 text-sm mt-1">Asignatura: Fundamentos de Seguridad de la Información — INACAP Valparaíso</p>
+                  </div>
+                  <div className="text-right text-xs text-slate-500 font-mono">
+                    <p>Docente: Rubén Schnettler</p>
+                    <p>Exigencia: 60% (Escala 1.0 - 7.0)</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tarjetas de Métricas de Auditoría */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
+                  <div className="p-3 bg-red-500/10 rounded-lg text-red-400"><AlertTriangle /></div>
+                  <div>
+                    <h4 className="text-xs text-slate-400 uppercase font-bold">Vulnerabilidades Analizadas</h4>
+                    <p className="text-xl font-bold text-white">3 Fallas Críticas</p>
+                  </div>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
+                  <div className="p-3 bg-blue-500/10 rounded-lg text-blue-400"><Layers /></div>
+                  <div>
+                    <h4 className="text-xs text-slate-400 uppercase font-bold">Activos Críticos Identificados</h4>
+                    <p className="text-xl font-bold text-white">&gt; 4 de Información</p>
+                  </div>
+                </div>
+                <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center gap-4">
+                  <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-400"><Users /></div>
+                  <div>
+                    <h4 className="text-xs text-slate-400 uppercase font-bold">Equipo Consultor</h4>
+                    <p className="text-sm font-bold text-white">E.Pérez</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Contexto del Proyecto */}
+              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-emerald-400" /> Alcance y Objetivos del Análisis
+                </h3>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  Este sistema interactivo consolida los hallazgos técnicos del <strong>Informe A</strong> (vulnerabilidades basadas en OWASP/CVSS) y el modelamiento de riesgos del <strong>Informe B</strong> (matrices de criticidad y controles preventivos). El objetivo principal es evaluar la postura de seguridad de las plataformas asignadas frente a vectores de ataque comunes en la capa de aplicación web, aplicando contramedidas arquitectónicas definitivas.
+                </p>
+              </div>
+
+              {/* SECCIÓN OBLIGATORIA: Bitácora de Prompts de IA */}
+              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <MessageSquare className="w-5 h-5 text-emerald-400" /> Bitácora de Uso de IA y Co-creación (Requisito de Rúbrica)
+                </h3>
+                <p className="text-slate-400 text-xs">
+                  Registro de prompts estructurados utilizados para investigar el comportamiento técnico de las fallas, junto con el control de calidad aplicado por los alumnos.
+                </p>
+
+                <div className="space-y-4 pt-2">
+                  {promptsIa.map((item, index) => (
+                    <div key={index} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                      <span className="text-xs font-bold text-emerald-400 font-mono block">{item.fase}</span>
+                      <p className="text-xs text-slate-300 italic bg-slate-900/50 p-2 rounded border border-slate-800/50">
+                        <span className="text-emerald-500 font-bold not-italic">Prompt:</span> "{item.prompt}"
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-1">
+                        <div className="bg-emerald-500/5 border border-emerald-500/20 p-2 rounded">
+                          <strong className="text-emerald-400">Lo que se aceptó:</strong> {item.aceptado}
+                        </div>
+                        <div className="bg-amber-500/5 border border-amber-500/20 p-2 rounded">
+                          <strong className="text-amber-400">Lo que se corrigió:</strong> {item.corregido}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Reflexión Final de Uso */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80">
+                  <h4 className="text-xs font-bold text-slate-300 uppercase mb-1">Reflexión Final del Equipo sobre el uso de la IA</h4>
+                  <p className="text-slate-400 text-xs leading-relaxed">
+                    La inteligencia artificial actuó como un acelerador para contrastar las mitigaciones teóricas con las implementaciones prácticas de código. No obstante, se requirió una auditoría crítica humana para adaptar los modelos sugeridos a los requerimientos específicos de la infraestructura local del portal y las métricas formales de la rúbrica institucional.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Marcador de posición para las otras pestañas */}
+          {activeTab !== 'resumen' && (
+            <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-3">
+              <Shield className="w-12 h-12 text-slate-600 mx-auto animate-pulse" />
+              <h3 className="text-xl font-bold text-white uppercase">{activeTab}</h3>
+              <p className="text-sm text-slate-400 max-w-md mx-auto">
+                Módulo en preparación para el siguiente commit progresivo de desarrollo de la auditoría.
+              </p>
+            </div>
+          )}
+
         </div>
       </main>
 
