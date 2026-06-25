@@ -11,7 +11,7 @@ export default function App() {
   const promptsIa = [
     {
       fase: "Investigación de Inyección SQL",
-      prompt: "Actúa como un auditor de seguridad senior. Explica los mecanismos de mitigación de la causa raíz para una inyección SQL basada en un portal web corporativo utilizando consultas parametrizadas en Node.js.",
+      prompt: "Actúa como un auditor de seguridad senior. Explica los mechanisms de mitigación de la causa raíz para una inyección SQL basada en un portal web corporativo utilizando consultas parametrizadas en Node.js.",
       aceptado: "Se adoptó el uso de marcadores de posición (?) para desvincular por completo las instrucciones del motor SQL de los datos proporcionados por el usuario.",
       corregido: "La IA sugirió inicialmente un WAF genérico, pero lo corregimos priorizando la parametrización en el código fuente para eliminar la causa raíz."
     },
@@ -147,7 +147,7 @@ export default function App() {
                   <div className="p-3 bg-emerald-500/10 rounded-lg text-emerald-400"><Users /></div>
                   <div>
                     <h4 className="text-xs text-slate-400 uppercase font-bold">Equipo Consultor</h4>
-                    <p className="text-sm font-bold text-white">E.Perez</p>
+                    <p className="text-sm font-bold text-white">E.Pérez</p>
                   </div>
                 </div>
               </div>
@@ -300,8 +300,107 @@ db.query(query, [username, password], (err, result) => {
             </div>
           )}
 
+          {/* 3. PESTAÑA: XSS REFLEJADO */}
+          {activeTab === 'xss' && (
+            <div className="space-y-6 animate-fadeIn">
+              
+              {/* Título y Categoría OWASP */}
+              <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-1 rounded">OWASP A03:2021-Injection</span>
+                    <h2 className="text-2xl font-black text-white mt-2">Falla 02: Cross-Site Scripting Reflejado (XSS)</h2>
+                    <p className="text-slate-400 text-sm mt-1">Identificado en la barra de búsquedas y parámetros dinámicos de respuesta rápida.</p>
+                  </div>
+                  <div className="bg-amber-500/20 border border-amber-500/40 text-amber-400 font-mono text-xs px-3 py-2 rounded-xl text-center">
+                    <span className="block text-[10px] uppercase font-bold text-slate-400">Severidad</span>
+                    <strong className="text-lg">MEDIA</strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tabla CVSS v3.1 */}
+              <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <div className="bg-slate-850 p-4 border-b border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-200">Puntuación Calculada CVSS v3.1</h3>
+                </div>
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="bg-slate-950 text-slate-400 border-b border-slate-800">
+                      <th className="p-3">Métrica Base</th>
+                      <th className="p-3">Valor del Vector</th>
+                      <th className="p-3">Impacto Técnico</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800 text-slate-300">
+                    <tr>
+                      <td className="p-3 font-semibold text-white">Vector Completo</td>
+                      <td className="p-3 font-mono text-amber-400">CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</td>
+                      <td className="p-3">Requiere que la víctima haga clic en un enlace malicioso diseñado por el atacante.</td>
+                    </tr>
+                    <tr>
+                      <td className="p-3 font-semibold text-white">Puntuación Final</td>
+                      <td className="p-3 font-bold text-amber-400">6.1 / 10.0</td>
+                      <td className="p-3">Ejecución remota de scripts dentro del contexto de sesión de la víctima (Robo de Session Tokens).</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Causa Raíz */}
+              <div className="bg-slate-900 border border-slate-800 p-6 rounded-xl space-y-2">
+                <h3 className="text-sm font-bold text-white uppercase tracking-wider text-emerald-400">Análisis de Causa Raíz</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  La falla ocurre porque la aplicación toma un parámetro enviado directamente desde la URL (query parameter) y lo incrusta de vuelta en la estructura HTML del navegador sin sanitización previa ni codificación de entidades HTML. Esto permite romper las etiquetas de texto originales y forzar al navegador a interpretar secuencias de comandos maliciosas tipo <code>&lt;script&gt;</code>.
+                </p>
+              </div>
+
+              {/* Bloques de Código */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                
+                {/* Código Vulnerable */}
+                <div className="bg-slate-900 border border-red-900/40 rounded-xl overflow-hidden">
+                  <div className="bg-red-950/40 p-3 border-b border-red-900/40">
+                    <span className="text-xs font-bold text-red-400 font-mono">❌ Código Vulnerable (Renderizado Directo)</span>
+                  </div>
+                  <pre className="p-4 text-xs font-mono text-slate-300 overflow-x-auto bg-slate-950/80 leading-relaxed">
+{`app.get('/buscar', (req, res) => {
+  const terminoBusqueda = req.query.q;
+  
+  // CAUSA RAÍZ: Reflejo directo en HTML sin escapar caracteres especiales
+  res.send(\`<div>Resultados para: \${terminoBusqueda}</div>\`);
+});`}
+                  </pre>
+                </div>
+
+                {/* Código Corregido */}
+                <div className="bg-slate-900 border border-emerald-900/40 rounded-xl overflow-hidden">
+                  <div className="bg-emerald-950/40 p-3 border-b border-emerald-900/40">
+                    <span className="text-xs font-bold text-emerald-400 font-mono">🛡️ Mitigación Arquitectónica (Sanitización y Escape de Entidades)</span>
+                  </div>
+                  <pre className="p-4 text-xs font-mono text-slate-300 overflow-x-auto bg-slate-950/80 leading-relaxed">
+{`const createDOMPurify = require('dompurify');
+const { JSDOM } = require('jsdom');
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
+
+app.get('/buscar', (req, res) => {
+  const terminoBusqueda = req.query.q;
+  
+  // SOLUCIÓN: Sanitización rigurosa de caracteres maliciosos (<, >, /)
+  const safeQuery = DOMPurify.sanitize(terminoBusqueda);
+  
+  res.send(\`<div>Resultados para: \${safeQuery}</div>\`);
+});`}
+                  </pre>
+                </div>
+
+              </div>
+            </div>
+          )}
+
           {/* Marcador de posición para las otras pestañas restantes */}
-          {activeTab !== 'resumen' && activeTab !== 'sqli' && (
+          {activeTab !== 'resumen' && activeTab !== 'sqli' && activeTab !== 'xss' && (
             <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl text-center space-y-3">
               <Shield className="w-12 h-12 text-slate-600 mx-auto animate-pulse" />
               <h3 className="text-xl font-bold text-white uppercase">{activeTab}</h3>
