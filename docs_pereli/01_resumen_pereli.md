@@ -1,6 +1,6 @@
 # Informe Técnico de Auditoría - Resumen Ejecutivo
 
-**Equipo Consultor:** Elías Pérez B. & Pedro Perreira
+**Equipo Consultor:** Elías Pérez B.
 **Plataforma Evaluada:** FitZone
 **Metodología:** NIST SP 800-30 & OWASP Top 10
 

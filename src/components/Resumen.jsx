@@ -13,7 +13,7 @@ export default function Resumen() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 pt-6 border-t border-slate-800 text-xs font-mono">
           <div>
             <span className="text-slate-500 block uppercase font-bold">Equipo Consultor</span>
-            <span className="text-white text-sm font-sans font-medium block mt-1">Elías Pérez B. & Pedro Perreira</span>
+            <span className="text-white text-sm font-sans font-medium block mt-1">Elías Pérez B.</span>
           </div>
           <div>
             <span className="text-slate-500 block uppercase font-bold">Plataforma Evaluada</span>
