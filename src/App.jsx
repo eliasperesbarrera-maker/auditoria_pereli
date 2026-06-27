@@ -63,7 +63,7 @@ export default function App() {
 
         {/* Pie de la barra lateral */}
         <div className="p-4 border-t border-slate-800 text-[10px] text-slate-500 font-mono text-center">
-          Consultores: Elías P. & Pedro P.
+          Consultores: Elías P.
         </div>
       </aside>
 
