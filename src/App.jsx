@@ -4,18 +4,27 @@ import InyeccionSQL from './components/InyeccionSQL';
 import XSS from './components/XSS';
 import Comandos from './components/Comandos';
 import Activos from './components/Activos';
+import Matriz from './components/Matriz';
+import Controles from './components/Controles';
+import Recuperacion from './components/Recuperacion';
+import Prompts from './components/Prompts';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('resumen');
 
   // Estructura limpia para los botones del menú
   const menuItems = [
-    { id: 'resumen', label: '📊 Resumen Ejecutivo' },
-    { id: 'sqli', label: '💉 Inyección SQL' },
-    { id: 'xss', label: '🛡️ XSS Reflejado' },
-    { id: 'cmd', label: '💻 Inyección de Comandos' },
-    { id: 'activos', label: '📋 Activos y Riesgos' }
-  ];
+  { id: 'resumen', label: '📊 Resumen Ejecutivo' },
+  { id: 'sqli', label: '🛑 02. Inyección SQL' },
+  { id: 'xss', label: '⚠️ 03. Cross-Site Scripting (XSS)' },
+  { id: 'comandos', label: '💻 04. Inyección de Comandos' },
+  { id: 'activos', label: '📦 05. Inventario de Activos' },
+  { id: 'matriz', label: '📊 06. Matriz de Riesgo' },
+  { id: 'controles', label: '🛡️ 07. Prevención y Controles' },
+  { id: 'recuperacion', label: '🔄 08. Plan de Recuperación' },
+  { id: 'prompts', label: '🤖 09. Bitácora de Prompts' },
+];
+ 
 
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100">
@@ -64,8 +73,12 @@ export default function App() {
           {activeTab === 'resumen' && <Resumen />}
           {activeTab === 'sqli' && <InyeccionSQL />}
           {activeTab === 'xss' && <XSS />}
-          {activeTab === 'cmd' && <Comandos />}
+          {activeTab === 'comandos' && <Comandos />}
           {activeTab === 'activos' && <Activos />}
+          {activeTab === 'matriz' && <Matriz />}
+          {activeTab === 'controles' && <Controles />}
+          {activeTab === 'recuperacion' && <Recuperacion />}
+          {activeTab === 'prompts' && <Prompts />}
         </div>
       </main>
 
